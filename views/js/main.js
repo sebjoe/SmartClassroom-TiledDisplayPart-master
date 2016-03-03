@@ -938,7 +938,8 @@ function initializeEventListener() {
             windowList[windowId].data.game.launchFullScreen();
         }
 		else if (windowList[windowId].type == "gameSnake"){
-			console.log("windowList[windowId].data.game "+windowList[windowId].data.game);	
+			console.log("windowList[windowId].data.game "+windowList[windowId].data.game);
+			console.log("windowId: "+windowId);	
 			windowList[windowId].data.game.launchFullScreen();
 		}
         else {

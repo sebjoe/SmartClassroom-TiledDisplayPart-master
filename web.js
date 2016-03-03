@@ -325,6 +325,33 @@ everyone.now.filterRemoteGameControl = function (windowId, game, controlType, va
 
 
 
+
+//=============================================================================
+// REMOTE CONTROL FOR SYNCHRONIZING SNAKE GAME BETWEEN CLIENTS
+//=============================================================================
+    
+// called from client - just execute one client context (host)
+everyone.now.askRemoteSnakeControl = function (windowId, game, controlType, value, destination) {
+    if (destination == "all"){
+       everyone.now.remoteSnakeControl(windowId, game, controlType, value, this.now.id);
+    }
+    else if (destination == "except-host") {
+        everyone.now.filterRemoteSnakeGameControl(windowId, game, controlType, value, this.now.id);
+    }
+    else if (destination == "master") {
+        clientList[hosts[windowId].client].object.now.remoteSnakeControl(windowId, game, controlType, value);
+    }
+};
+
+// called from server - execute every client context, then we can do filtering
+everyone.now.filterRemoteSnakeGameControl = function (windowId, game, controlType, value, clientId) {
+    //The client which has launched askRemoteSnakeControl is unauthorized to pass
+    if (this.now.id == clientId) { return; }
+    this.now.remoteSnakeControl(windowId, game, controlType, value);
+};
+
+
+
 //=============================================================================
 // Web Application to communicate with the Java Server (Tableau Interactif)
 //=============================================================================

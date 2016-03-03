@@ -16,10 +16,10 @@ launchSnakeGame = function (windowId, isMaster) {
 
 var game = {
 
-	 cw : 10,
-	 d : "",
-	 food : {},
-	 score :0,
+	cw : 10,
+	d : "",
+	food : {},
+	score :0,
 	canvas : canvas,
     W : canvas.width, // Window's width
     H : canvas.height, // Window's height
@@ -28,7 +28,11 @@ var game = {
 	//Lets create the snake now
 	snake_array : [], //an array of cells to make up the snake
 	
-	init : function( ){
+	init : function(){
+		ctx = this.canvas.getContext("2d");
+		console.log("W:"+this.W);
+		console.log("H:"+this.H);
+
 		
 		d = "right"; //default direction
 		this.create_snake();
@@ -62,8 +66,11 @@ var game = {
 	create_food :function ()
 	{
 		food = {
-			x: Math.round(Math.random()*(w-this.cw)/this.cw), 
-			y: Math.round(Math.random()*(h-this.cw)/this.cw), 
+//			x: Math.round(Math.random()*(w-this.cw)/this.cw), 
+//			y: Math.round(Math.random()*(h-this.cw)/this.cw), 
+			x: Math.round(Math.random()*(this.W-this.cw)/this.cw), 
+			y: Math.round(Math.random()*(this.H-this.cw)/this.cw), 
+
 		};
 		
 		//This will create a cell with x/y between 0-44
@@ -73,13 +80,15 @@ var game = {
 	//Lets paint the snake now
 	paint : function (s,that)
 	{
-		
+		console.log("dans game paint snake");	
 		//To avoid the snake trail we need to paint the BG on every frame
 		//Lets paint the canvas now
 		ctx.fillStyle = "white";
-		ctx.fillRect(0, 0, w, h);
+//		ctx.fillRect(0, 0, w, h);
+		ctx.fillRect(0, 0, that.W, that.H);
 		ctx.strokeStyle = "black";
-		ctx.strokeRect(0, 0, w, h);
+//		ctx.strokeRect(0, 0, w, h);
+		ctx.strokeRect(0, 0, that.W, that.H);
 		
 		//The movement code for the snake to come here.
 		//The logic is simple
@@ -100,7 +109,7 @@ var game = {
 		//Lets add the code for body collision
 		//Now if the head of the snake bumps into its body, the game will restart
 
-		if(nx == -1 || nx == w/that.cw || ny == -1 || ny == h/that.cw || that.check_collision(nx, ny, s))
+		if(nx == -1 || nx == that.W/that.cw || ny == -1 || ny == that.H/that.cw || that.check_collision(nx, ny, s))
 		{
 
 			//restart game
@@ -145,7 +154,7 @@ var game = {
 		that.paint_cell(food.x, food.y);
 		//Lets paint the score
 		var score_text = "Score: " + score;
-		ctx.fillText(score_text, 5, h-5);
+		ctx.fillText(score_text, 5, that.H-5);
 	},
 	
 	//Lets first create a generic function to paint cells
@@ -191,7 +200,7 @@ var game = {
         fullWindowSnake();
    }
 }
-game.init();
+//game.init();
 
 
 $(document).keydown(function(e){
@@ -212,10 +221,11 @@ function fullWindowSnake() {
 	if (!fullWindowState) {
         fullWindowState = true;
         var windowId = canvas.id.split('canvas')[1];
-        
+        console.log("windowId: "+windowId);
+
         // Canvas goes full window
         var canvasFullscreen = document.getElementById('canvasFullscreen');
-		console.log("toto: "+canvasFullscreen);
+        console.log("canvasFullscreen: "+canvasFullscreen);
         launchFullScreen(document.documentElement);
         
         saveLeft = canvas.parentElement.parentElement.offsetLeft;
@@ -225,11 +235,20 @@ function fullWindowSnake() {
         
         canvasFullscreen.width = window.innerWidth;
         canvasFullscreen.height = window.innerHeight;
+//        canvasFullscreen.width = 1024;
+//        canvasFullscreen.height = 800;
+
         canvasFullscreen.style.display = "block";
-        
-        game.canvas = canvasFullscreen;
-        game.W = canvasFullscreen.width;
+
+        game.canvas = canvasFullscreen;        
+		game.W = canvasFullscreen.width;
         game.H = canvasFullscreen.height;
+
+		console.log("game.H: "+game.H);
+		console.log("game.W: "+game.W);
+
+		
+
                     
 //        var endFullscreen = function (e) {
 //            cancelFullScreen(document.documentElement);
@@ -244,17 +263,17 @@ function fullWindowSnake() {
 //            canvasFullscreen.style.display = "none";
 //            fullWindowState = false;
 //            
-//            canvasFullscreen.removeEventListener("mousemove", trackPosition, false);
-//            canvasFullscreen.removeEventListener("touchmove", trackPosition, false);
-//            canvasFullscreen.removeEventListener("mousedown", btnClick, false);
-//            canvas.removeEventListener("endfullscreen", endFullscreen, false);
+////            canvasFullscreen.removeEventListener("mousemove", trackPosition, false);
+////            canvasFullscreen.removeEventListener("touchmove", trackPosition, false);
+////            canvasFullscreen.removeEventListener("mousedown", btnClick, false);
+////            canvas.removeEventListener("endfullscreen", endFullscreen, false);
 //			game.init();
 //            
-//            cancelPingPong();
-//            startPingPong();
+////            cancelPingPong();
+////            startPingPong();
 //        }
 //        var askEndFullscreen = function (e) {
-//            askRemoteGameControl(windowId, "ping-pong", "endfullscreen", "", "all");
+//            askRemoteSnakeGameControl(windowId, "snake", "endfullscreen", "", "all");
 //        }
         
 //        canvasFullscreen.addEventListener("mousemove", trackPosition, false);

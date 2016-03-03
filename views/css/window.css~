@@ -203,7 +203,8 @@ position: relative;
 }
 .canvasFullWindow{
     position: absolute;
-    background-color: #000000;
+    /*background-color: #000000;*/
+	background-color: #ffffff;
     top: 0px;
     left: 0px;
 }
